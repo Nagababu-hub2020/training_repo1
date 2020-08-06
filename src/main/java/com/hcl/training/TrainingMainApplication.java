@@ -27,6 +27,7 @@ public class TrainingMainApplication extends SpringBootServletInitializer {
 				.apis(RequestHandlerSelectors.basePackage("com.hcl.training")).build()
 				.apiInfo(metaInfo());
 	}
+	
 	private ApiInfo metaInfo() {
 		ApiInfo apiInfo = new ApiInfo("Swagger-REST Application ",
 				" swagger with rest services ",
@@ -38,4 +39,16 @@ public class TrainingMainApplication extends SpringBootServletInitializer {
 				new ArrayList());
 		return apiInfo;
 	}
+	
+	private static final String[] AUTH_WHITELIST = {
+                "**/swagger-resources/**",
+                "/swagger-ui.html",
+                "/v2/api-docs",
+                "/webjars/**"
+        };
+
+        @Override
+        public void configure(WebSecurity web) throws Exception {
+               web.ignoring().antMatchers(AUTH_WHITELIST);
+        }
 }
