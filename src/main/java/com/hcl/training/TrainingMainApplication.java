@@ -2,8 +2,10 @@ package com.hcl.training;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
+//import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
 import org.springframework.context.annotation.Bean;
+import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
+import springfox.documentation.builders.PathSelectors;
 import springfox.documentation.builders.RequestHandlerSelectors;
 import springfox.documentation.service.ApiInfo;
 import springfox.documentation.service.Contact;
@@ -15,17 +17,25 @@ import java.util.ArrayList;
 
 @EnableSwagger2
 @SpringBootApplication
-public class TrainingMainApplication extends SpringBootServletInitializer {
+public class TrainingMainApplication {
 
 	public static void main(String[] args) {
 		SpringApplication.run(TrainingMainApplication.class, args);
 	}
 
+	@Bean
 	public Docket applicationApi() {
-		return new Docket(DocumentationType.SWAGGER_2).select()
+		/*return new Docket(DocumentationType.SWAGGER_2).select()
 				.apis(RequestHandlerSelectors.basePackage("com.hcl.training")).build()
-				.apiInfo(metaInfo());
+				.apiInfo(metaInfo());*/
+
+		return new Docket(DocumentationType.SWAGGER_2).select()
+				.apis(RequestHandlerSelectors
+						.basePackage("com.hcl.training.controller"))
+				.paths(PathSelectors.regex("/.*"))
+				.build().apiInfo(metaInfo());
 	}
+
 	private ApiInfo metaInfo() {
 		ApiInfo apiInfo = new ApiInfo("Swagger-REST Application ",
 				" swagger with rest services ",
@@ -37,5 +47,12 @@ public class TrainingMainApplication extends SpringBootServletInitializer {
 				new ArrayList());
 
 		return apiInfo;
+	}
+
+	protected void addResourceHandlers(ResourceHandlerRegistry registry) {
+		registry.addResourceHandler("swagger-ui.html")
+				.addResourceLocations("classpath:/META-INF/resources/");
+		registry.addResourceHandler("/webjars/**")
+				.addResourceLocations("classpath:/META-INF/resources/webjars/");
 	}
 }
